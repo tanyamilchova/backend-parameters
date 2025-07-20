@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-extra-config
+  namespace: ff1519a6
+data:
+  application.properties: |
+    custom.config=from-configmap
+    another.value=config-value
