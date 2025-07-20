@@ -98,3 +98,28 @@ ingress:
     #  - secretName: chart-example-tls
     #    hosts:
     #      - chart-example.local
+
+# ConfigMap for application.properties file content
+cmExtraConfig:
+  applicationProperties: |
+    # Your application properties
+    key1=value1
+    key2=value2
+
+# ConfigMap for environment variables
+cmExtraEnv:
+  ENV_VAR1: value1
+  ENV_VAR2: value2
+
+# Secret for application secret properties
+secretExtraConfig:
+  applicationSecretProperties: |
+    # Your secret properties
+    secretKey1=secretValue1
+    secretKey2=secretValue2
+
+# Secret for environment variables
+secretExtraEnv:
+  ENV_VAR3: secret3
+  ENV_VAR4: secret4
+

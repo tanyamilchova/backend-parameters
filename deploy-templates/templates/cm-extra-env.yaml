@@ -2,8 +2,8 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: cm-extra-env
-  namespace: ff1519a6
+  namespace: {{ .Release.Namespace }}
 data:
-  ENV_VAR1: value1
-  SERVER_PORT: "8080"
-  LOGGING_LEVEL_ROOT: "INFO"
+  {{- with .Values.cmExtraEnv }}
+  {{ toYaml . | indent 2 }}
+  {{- end }}
