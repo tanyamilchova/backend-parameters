@@ -1,18 +1,21 @@
-{{- if .Values.ingress.enabled -}}
-  {{- $fullName := include "backend-expose.fullname" . -}}
-  {{- $svcPort := .Values.service.port -}}
+{{- if .Values.ingress.enabled }}
+  {{- $fullName := include "backend-expose.fullname" . }}
+  {{- $svcPort := .Values.service.port }}
+
   {{- if and .Values.ingress.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
   {{- if not (hasKey .Values.ingress.annotations "kubernetes.io/ingress.class") }}
-  {{- $_ := set .Values.ingress.annotations "kubernetes.io/ingress.class" .Values.ingress.className}}
+  {{- $_ := set .Values.ingress.annotations "kubernetes.io/ingress.class" .Values.ingress.className }}
   {{- end }}
   {{- end }}
-  {{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion -}}
+
+  {{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion }}
 apiVersion: networking.k8s.io/v1
-  {{- else if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
+  {{- else if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion }}
 apiVersion: networking.k8s.io/v1beta1
-  {{- else -}}
+  {{- else }}
 apiVersion: extensions/v1beta1
   {{- end }}
+
 kind: Ingress
 metadata:
   name: {{ $fullName }}
@@ -26,6 +29,7 @@ spec:
   {{- if and .Values.ingress.className (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) }}
   ingressClassName: {{ .Values.ingress.className }}
   {{- end }}
+
   {{- if .Values.ingress.tls }}
   tls:
     {{- range .Values.ingress.tls }}
@@ -36,11 +40,9 @@ spec:
       secretName: {{ .secretName }}
     {{- end }}
   {{- end }}
+
   rules:
     {{- range .Values.ingress.hosts }}
-      # if .host = edpDefault then we need to use
-      # {{ $fullName }}-{{ $.Release.Namespace }}.{{ $.Values.ingress.dnsWildcard }}
-      # otherwise we need to use {{ .host }}
       {{- if eq .host "edpDefault" }}
       - host: {{ $fullName }}-{{ $.Release.Namespace }}.{{ $.Values.ingress.dnsWildcard }}
       {{- else }}
