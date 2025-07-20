@@ -37,6 +37,16 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: cm-extra-env
+            - secretRef:
+                name: secret-extra-env
+          volumeMounts:
+            - name: config-volume
+              mountPath: /config
+            - name: secret-config-volume
+              mountPath: /secret-config
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
           readinessProbe:
@@ -55,3 +65,10 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      volumes:
+        - name: config-volume
+          configMap:
+            name: cm-extra-config
+        - name: secret-config-volume
+          secret:
+            secretName: secret-extra-config
