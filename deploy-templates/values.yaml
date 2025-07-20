@@ -122,4 +122,3 @@ secretExtraConfig:
 secretExtraEnv:
   ENV_VAR3: secret3
   ENV_VAR4: secret4
-
