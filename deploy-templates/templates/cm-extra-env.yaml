@@ -4,6 +4,10 @@ metadata:
   name: cm-extra-env
   namespace: {{ .Release.Namespace }}
 data:
-  {{- with .Values.cmExtraEnv }}
-  {{ toYaml . | indent 2 }}
-  {{- end }}
+{{- with .Values.cmExtraEnv }}
+{{ toYaml . | indent 2 }}
+{{- end }}
+
+
+
+
