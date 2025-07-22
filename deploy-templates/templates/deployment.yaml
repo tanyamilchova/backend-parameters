@@ -69,6 +69,14 @@ spec:
         - name: config-volume
           configMap:
             name: cm-extra-config
+            items:
+              - key: application.properties
+                path: application.properties
+            defaultMode: 420
         - name: secret-config-volume
           secret:
             secretName: secret-extra-config
+            items:
+              - key: application.secret.properties
+                path: application.secret.properties
+            defaultMode: 420

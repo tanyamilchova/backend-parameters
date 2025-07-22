@@ -101,24 +101,28 @@ ingress:
 
 # ConfigMap for application.properties file content
 cmExtraConfig:
-  applicationProperties: |
-    # Your application properties
-    key1=value1
-    key2=value2
+  ENV_VAR1: value1
+  application.properties: |
+    server.port=8080
+    logging.level.root=INFO
+
 
 # ConfigMap for environment variables
 cmExtraEnv:
-  ENV_VAR1: value1
-  ENV_VAR2: value2
+    SERVER_PORT: "8080"
+    LOGGING_LEVEL_ROOT: "INFO"
+
 
 # Secret for application secret properties
 secretExtraConfig:
+  ENV_VAR4: value4
   applicationSecretProperties: |
-    # Your secret properties
-    secretKey1=secretValue1
-    secretKey2=secretValue2
+    application.secret.properties: |
+    server.port=8080
+    logging.level.root=INFO
 
 # Secret for environment variables
 secretExtraEnv:
-  ENV_VAR3: secret3
-  ENV_VAR4: secret4
+  ENV_VAR2: value2
+  ENV_VAR3: value3
+
