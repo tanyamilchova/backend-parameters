@@ -1,5 +1,5 @@
 {{- if .Values.ingress.enabled }}
-{{- $fullName := include "backend-expose.fullname" . }}
+{{- $fullName := include "backend-parameters.fullname" . }}
 {{- $svcPort := .Values.service.port }}
 
 {{- if and .Values.ingress.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
@@ -20,7 +20,7 @@ kind: Ingress
 metadata:
   name: {{ $fullName }}
   labels:
-    {{- include "backend-expose.labels" . | nindent 4 }}
+    {{- include "backend-parameters.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
