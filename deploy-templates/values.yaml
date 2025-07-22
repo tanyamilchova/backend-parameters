@@ -109,8 +109,8 @@ cmExtraConfig:
 
 # ConfigMap for environment variables
 cmExtraEnv:
-    SERVER_PORT: "8080"
-    LOGGING_LEVEL_ROOT: "INFO"
+  SERVER_PORT: "8080"
+  LOGGING_LEVEL_ROOT: "INFO"
 
 
 # Secret for application secret properties
@@ -125,4 +125,3 @@ secretExtraConfig:
 secretExtraEnv:
   ENV_VAR2: value2
   ENV_VAR3: value3
-
