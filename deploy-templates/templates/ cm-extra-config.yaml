@@ -5,6 +5,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
 data:
   application.properties: |-
-{{ .Values.cmExtraConfig.applicationProperties | indent 4 }}
+{{ index .Values.cmExtraConfig "application.properties" | indent 4 }}
+
 
 
