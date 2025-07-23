@@ -3,6 +3,7 @@ kind: ConfigMap
 metadata:
   name: cm-extra-config
 data:
+  ENV_VAR1: {{ .Values.cmExtraConfig.ENV_VAR1 | quote }}
   application.properties: |-
 {{ .Values.application.properties.from.configmap | indent 4 }}
 
