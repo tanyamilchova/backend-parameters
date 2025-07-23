@@ -4,7 +4,8 @@ metadata:
   name: cm-extra-config
 data:
   application.properties: |-
-  {{ .Values.application.properties.from.configmap | indent 4 }}
+{{ .Values.application.properties.from.configmap | indent 4 }}
+
 
 
 
