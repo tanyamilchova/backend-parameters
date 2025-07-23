@@ -122,3 +122,17 @@ secretExtraConfig:
 secretExtraEnv:
   ENV_VAR2: value2
   ENV_VAR3: value3
+
+application:
+  properties:
+    from:
+      configmap: |-
+        server.port=8080
+        logging.level.root=INFO
+
+  secret:
+    properties:
+      from:
+        secret: |-
+          server.port=8080
+          logging.level.root=INFO
