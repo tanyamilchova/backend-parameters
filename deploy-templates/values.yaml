@@ -43,7 +43,6 @@ service:
   type: ClusterIP
   port: 8080
 
-
 ingress:
   enabled: true
   dnsWildcard: development.krci-dev.cloudmentor.academy
@@ -82,8 +81,6 @@ readinessProbe:
   tcpSocket:
     port: http
   initialDelaySeconds: 20
-
-
 
 autoscaling:
   enabled: false
