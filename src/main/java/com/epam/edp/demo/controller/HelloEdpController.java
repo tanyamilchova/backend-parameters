@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * @author Pavlo_Yemelianov
@@ -23,86 +24,23 @@ public class HelloEdpController {
     @Value("${application.secret.properties.path:/secret-config/application.secret.properties}")
     private String secretConfigPath;
 
-    private static final Set<String> REQUIRED_KEYS = Set.of(
-            "BACKEND_PARAMETERS_PORT",
-            "BACKEND_PARAMETERS_PORT_8080_TCP",
-            "BACKEND_PARAMETERS_PORT_8080_TCP_ADDR",
-            "BACKEND_PARAMETERS_PORT_8080_TCP_PORT",
-            "BACKEND_PARAMETERS_PORT_8080_TCP_PROTO",
-            "BACKEND_PARAMETERS_SERVICE_HOST",
-            "BACKEND_PARAMETERS_SERVICE_PORT",
-            "BACKEND_PARAMETERS_SERVICE_PORT_HTTP",
-            "FLASK_RUN_FROM_CLI",
-            "GPG_KEY",
-            "HOME",
-            "HOSTNAME",
-            "KUBERNETES_PORT",
-            "KUBERNETES_PORT_443_TCP",
-            "KUBERNETES_PORT_443_TCP_ADDR",
-            "KUBERNETES_PORT_443_TCP_PORT",
-            "KUBERNETES_PORT_443_TCP_PROTO",
-            "KUBERNETES_SERVICE_HOST",
-            "KUBERNETES_SERVICE_PORT",
-            "KUBERNETES_SERVICE_PORT_HTTPS",
-            "LANG",
-            "PATH",
-            "PYTHON_VERSION",
-            "WERKZEUG_SERVER_FD",
-            "application.properties.from.configmap",
-            "application.secret.properties.from.secret"
-    );
-
     @GetMapping("/env")
     public Map<String, String> getEnv() {
-        Map<String, String> env = new HashMap<>();
+        // TreeMap for sorted and readable output
+        Map<String, String> env = new TreeMap<>(System.getenv());
 
-        // Read ConfigMap and Secret files for envFrom variables
-        Map<String, String> configMapData = readPropertiesFromFile(configMapConfigPath);
-        Map<String, String> secretData = readPropertiesFromFile(secretConfigPath);
-
-        // Read environment variables from System.getenv()
-        System.getenv().forEach((key, value) -> {
-            if (REQUIRED_KEYS.contains(key)) {
-                env.put(key, value);
-            }
-        });
-
-        // Add custom.config from ConfigMap
-        addConfigFileToEnv(env, configMapConfigPath, "application.properties.from.configmap");
-
-        // Add custom.config from Secret
-        addConfigFileToEnv(env, secretConfigPath, "application.secret.properties.from.secret");
+        // Add contents of mounted property files
+        env.put("application.properties.from.configmap", readFileContent(configMapConfigPath));
+        env.put("application.secret.properties.from.secret", readFileContent(secretConfigPath));
 
         return env;
     }
 
-    private Map<String, String> readPropertiesFromFile(String filePath) {
+    private String readFileContent(String filePath) {
         try {
-            String fileContent = new String(Files.readAllBytes(Paths.get(filePath)));
-            String[] lines = fileContent.split("\\r?\\n");
-            Map<String, String> properties = new HashMap<>();
-            for (String line : lines) {
-                String[] parts = line.split("=", 2);
-                if (parts.length == 2) {
-                    String key = parts[0].trim();
-                    String value = parts[1].trim();
-                    properties.put(key, value);
-                }
-            }
-            return properties;
+            return Files.readString(Paths.get(filePath));
         } catch (IOException e) {
-            e.printStackTrace();
-            return new HashMap<>();
-        }
-    }
-
-    private void addConfigFileToEnv(Map<String, String> env, String filePath, String envKey) {
-        try {
-            String fileContent = new String(Files.readAllBytes(Paths.get(filePath)));
-                env.put(envKey, fileContent);
-
-        } catch (IOException e) {
-            env.put(envKey, "File not found or unreadable");
+            return "File not found or unreadable: " + e.getMessage();
         }
     }
 
