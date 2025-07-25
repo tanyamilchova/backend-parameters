@@ -14,7 +14,7 @@ imagePullSecrets:
 # Define secret to pull images. Secret can be provisioned by edp-install or manually.
   - name: regcred
 nameOverride: ""
-fullnameOverride: backend-parameters
+fullnameOverride: ""
 framework: java17
 
 serviceAccount:
