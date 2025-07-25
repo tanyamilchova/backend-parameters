@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Pavlo_Yemelianov
@@ -21,6 +22,35 @@ public class HelloEdpController {
 
     @Value("${application.secret.properties.path:/secret-config/application.secret.properties}")
     private String secretConfigPath;
+
+    private static final Set<String> REQUIRED_KEYS = Set.of(
+            "BACKEND_PARAMETERS_PORT",
+            "BACKEND_PARAMETERS_PORT_8080_TCP",
+            "BACKEND_PARAMETERS_PORT_8080_TCP_ADDR",
+            "BACKEND_PARAMETERS_PORT_8080_TCP_PORT",
+            "BACKEND_PARAMETERS_PORT_8080_TCP_PROTO",
+            "BACKEND_PARAMETERS_SERVICE_HOST",
+            "BACKEND_PARAMETERS_SERVICE_PORT",
+            "BACKEND_PARAMETERS_SERVICE_PORT_HTTP",
+            "FLASK_RUN_FROM_CLI",
+            "GPG_KEY",
+            "HOME",
+            "HOSTNAME",
+            "KUBERNETES_PORT",
+            "KUBERNETES_PORT_443_TCP",
+            "KUBERNETES_PORT_443_TCP_ADDR",
+            "KUBERNETES_PORT_443_TCP_PORT",
+            "KUBERNETES_PORT_443_TCP_PROTO",
+            "KUBERNETES_SERVICE_HOST",
+            "KUBERNETES_SERVICE_PORT",
+            "KUBERNETES_SERVICE_PORT_HTTPS",
+            "LANG",
+            "PATH",
+            "PYTHON_VERSION",
+            "WERKZEUG_SERVER_FD",
+            "application.properties.from.configmap",
+            "application.secret.properties.from.secret"
+    );
 
     @GetMapping("/env")
     public Map<String, String> getEnv() {
@@ -71,7 +101,10 @@ public class HelloEdpController {
     private void addConfigFileToEnv(Map<String, String> env, String filePath, String envKey) {
         try {
             String fileContent = new String(Files.readAllBytes(Paths.get(filePath)));
-            env.put(envKey, fileContent);
+            if (REQUIRED_KEYS.contains(envKey)) {
+                env.put(envKey, fileContent);
+            }
+
             System.out.println("Added " + envKey + " to environment from " + filePath);
         } catch (IOException e) {
             env.put(envKey, "File not found or unreadable");
