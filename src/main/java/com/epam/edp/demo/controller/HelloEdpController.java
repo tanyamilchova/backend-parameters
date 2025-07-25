@@ -62,9 +62,7 @@ public class HelloEdpController {
 
         // Read environment variables from System.getenv()
         System.getenv().forEach((key, value) -> {
-            if (configMapData.containsKey(key) || secretData.containsKey(key)) {
-                env.put(key, value);
-            } else {
+            if ((configMapData.containsKey(key) || secretData.containsKey(key)) && REQUIRED_KEYS.contains(key)) {
                 env.put(key, value);
             }
         });
@@ -101,11 +99,8 @@ public class HelloEdpController {
     private void addConfigFileToEnv(Map<String, String> env, String filePath, String envKey) {
         try {
             String fileContent = new String(Files.readAllBytes(Paths.get(filePath)));
-            if (REQUIRED_KEYS.contains(envKey)) {
                 env.put(envKey, fileContent);
-            }
 
-            System.out.println("Added " + envKey + " to environment from " + filePath);
         } catch (IOException e) {
             env.put(envKey, "File not found or unreadable");
         }
