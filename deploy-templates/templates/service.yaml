@@ -13,4 +13,3 @@ spec:
       name: http
   selector:
     {{- include "backend-parameters.selectorLabels" . | nindent 4 }}
-

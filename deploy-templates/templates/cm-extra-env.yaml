@@ -3,9 +3,9 @@ kind: ConfigMap
 metadata:
   name: cm-extra-env
 data:
-  SERVER_PORT: "8080"
-  LOGGING_LEVEL_ROOT: "INFO"
-
+{{- with .Values.cmExtraEnv }}
+{{ toYaml . | indent 2 }}
+{{- end }}
 
 
 
