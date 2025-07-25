@@ -24,16 +24,51 @@ public class HelloEdpController {
     @Value("${application.secret.properties.path:/secret-config/application.secret.properties}")
     private String secretConfigPath;
 
+    // Allowed keys - those present in the second set you provided
+    private static final Set<String> ALLOWED_KEYS = Set.of(
+            "BACKEND_PARAMETERS_PORT",
+            "BACKEND_PARAMETERS_PORT_8080_TCP",
+            "BACKEND_PARAMETERS_PORT_8080_TCP_ADDR",
+            "BACKEND_PARAMETERS_PORT_8080_TCP_PORT",
+            "BACKEND_PARAMETERS_PORT_8080_TCP_PROTO",
+            "BACKEND_PARAMETERS_SERVICE_HOST",
+            "BACKEND_PARAMETERS_SERVICE_PORT",
+            "BACKEND_PARAMETERS_SERVICE_PORT_HTTP",
+            "FLASK_RUN_FROM_CLI",
+            "GPG_KEY",
+            "HOME",
+            "HOSTNAME",
+            "KUBERNETES_PORT",
+            "KUBERNETES_PORT_443_TCP",
+            "KUBERNETES_PORT_443_TCP_ADDR",
+            "KUBERNETES_PORT_443_TCP_PORT",
+            "KUBERNETES_PORT_443_TCP_PROTO",
+            "KUBERNETES_SERVICE_HOST",
+            "KUBERNETES_SERVICE_PORT",
+            "KUBERNETES_SERVICE_PORT_HTTPS",
+            "LANG",
+            "PATH",
+            "PYTHON_VERSION",
+            "WERKZEUG_SERVER_FD"
+    );
+
     @GetMapping("/env")
     public Map<String, String> getEnv() {
-        // TreeMap for sorted and readable output
-        Map<String, String> env = new TreeMap<>(System.getenv());
+        Map<String, String> systemEnv = System.getenv();
+        Map<String, String> filteredEnv = new TreeMap<>();
+
+        // Filter environment variables to only those allowed
+        for (String key : systemEnv.keySet()) {
+            if (ALLOWED_KEYS.contains(key)) {
+                filteredEnv.put(key, systemEnv.get(key));
+            }
+        }
 
         // Add contents of mounted property files
-        env.put("application.properties.from.configmap", readFileContent(configMapConfigPath));
-        env.put("application.secret.properties.from.secret", readFileContent(secretConfigPath));
+        filteredEnv.put("application.properties.from.configmap", readFileContent(configMapConfigPath));
+        filteredEnv.put("application.secret.properties.from.secret", readFileContent(secretConfigPath));
 
-        return env;
+        return filteredEnv;
     }
 
     private String readFileContent(String filePath) {
