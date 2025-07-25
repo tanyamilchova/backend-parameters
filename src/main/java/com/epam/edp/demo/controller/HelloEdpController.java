@@ -72,6 +72,7 @@ public class HelloEdpController {
         try {
             String fileContent = new String(Files.readAllBytes(Paths.get(filePath)));
             env.put(envKey, fileContent);
+            System.out.println("Added " + envKey + " to environment from " + filePath);
         } catch (IOException e) {
             env.put(envKey, "File not found or unreadable");
         }
