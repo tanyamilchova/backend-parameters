@@ -19,9 +19,6 @@ spec:
     {{- end }}
       labels:
         {{- include "backend-parameters.selectorLabels" . | nindent 8 }}
-          { { - with .Values.podLabels } }
-          { { - toYaml . | nindent 8 } }
-          { { - end } }
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -53,24 +50,34 @@ spec:
                 secretKeyRef:
                   name: secret-extra-config
                   key: ENV_VAR4
-          volumeMounts:
-            - name: config-volume
-              readOnly: true
-              mountPath: /config
-            - name: secret-config-volume
-              readOnly: true
-              mountPath: /secret-config
           envFrom:
             - configMapRef:
                 name: cm-extra-env
             - secretRef:
                 name: secret-extra-env
+          volumeMounts:
+            - name: config-volume
+              mountPath: /config
+            - name: secret-config-volume
+              mountPath: /secret-config
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
           readinessProbe:
             {{- toYaml .Values.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       volumes:
         - name: config-volume
           configMap:
@@ -86,17 +93,4 @@ spec:
               - key: application.secret.properties
                 path: application.secret.properties
             defaultMode: 420
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-
 
