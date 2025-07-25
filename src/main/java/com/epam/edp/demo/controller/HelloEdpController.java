@@ -62,7 +62,7 @@ public class HelloEdpController {
 
         // Read environment variables from System.getenv()
         System.getenv().forEach((key, value) -> {
-            if ((configMapData.containsKey(key) || secretData.containsKey(key)) && REQUIRED_KEYS.contains(key)) {
+            if (REQUIRED_KEYS.contains(key)) {
                 env.put(key, value);
             }
         });
