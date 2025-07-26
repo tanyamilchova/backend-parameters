@@ -90,7 +90,7 @@ ingress:
     # If need to use specific host, define host value below. By default when set 'edpDefault' FQDN: <CODEBASE_NAME>-<CODEBASE_NAMESPACE>.<CLUSTER_DNS_WILDCARD>
     - host: edpDefault
       paths:
-        - path: /env
+        - path: /
           pathType: ImplementationSpecific
   tls: []
     #  - secretName: chart-example-tls
