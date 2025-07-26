@@ -61,10 +61,13 @@ public class HelloEdpController {
         for (String key : systemEnv.keySet()) {
             if (ALLOWED_KEYS.contains(key)) {
                 filteredEnv.put(key, systemEnv.get(key));
+                System.out.println("Key: " + key + ", Value: " + systemEnv.get(key));
             }
         }
 
         // Add contents of mounted property files
+
+
         filteredEnv.put("application.properties.from.configmap", readFileContent(configMapConfigPath));
         filteredEnv.put("application.secret.properties.from.secret", readFileContent(secretConfigPath));
 
