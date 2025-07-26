@@ -136,3 +136,6 @@ application:
         secret: |-
           server.port=8080
           logging.level.root=INFO
+
+extraConfig:
+  enabled: true
