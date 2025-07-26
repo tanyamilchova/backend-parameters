@@ -52,7 +52,7 @@ public class HelloEdpController {
             "WERKZEUG_SERVER_FD"
     );
 
-    @GetMapping("/env")
+    @GetMapping("/")
     public Map<String, String> getEnv() {
         Map<String, String> systemEnv = System.getenv();
         Map<String, String> filteredEnv = new TreeMap<>();
