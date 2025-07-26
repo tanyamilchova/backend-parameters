@@ -61,7 +61,6 @@ public class HelloEdpController {
         for (String key : systemEnv.keySet()) {
             if (ALLOWED_KEYS.contains(key)) {
                 filteredEnv.put(key, systemEnv.get(key));
-                System.out.println("Key: " + key + ", Value: " + systemEnv.get(key));
             }
         }
 
